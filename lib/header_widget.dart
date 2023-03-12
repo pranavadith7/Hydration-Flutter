@@ -1,5 +1,3 @@
-// This widget will draw header section of all page. Wich you will get with the project source code.
-
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatefulWidget {
@@ -32,8 +30,8 @@ class _HeaderWidgetState extends State<HeaderWidget> {
         children: [
           ClipPath(
             child: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
                     colors: [
                       Theme.of(context).primaryColor.withOpacity(0.4),
                       Theme.of(context).accentColor.withOpacity(0.4),
@@ -45,7 +43,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                 ),
               ),
             ),
-            clipper: new ShapeClipper(
+            clipper: ShapeClipper(
                 [
                   Offset(width / 5, _height),
                   Offset(width / 10 * 5, _height - 60),
@@ -56,8 +54,8 @@ class _HeaderWidgetState extends State<HeaderWidget> {
           ),
           ClipPath(
             child: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
                     colors: [
                       Theme.of(context).primaryColor.withOpacity(0.4),
                       Theme.of(context).accentColor.withOpacity(0.4),
@@ -69,7 +67,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                 ),
               ),
             ),
-            clipper: new ShapeClipper(
+            clipper: ShapeClipper(
                 [
                   Offset(width / 3, _height + 20),
                   Offset(width / 10 * 8, _height - 60),
@@ -80,8 +78,8 @@ class _HeaderWidgetState extends State<HeaderWidget> {
           ),
           ClipPath(
             child: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
                     colors: [
                       Theme.of(context).primaryColor,
                       Theme.of(context).accentColor,
@@ -93,7 +91,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                 ),
               ),
             ),
-            clipper: new ShapeClipper(
+            clipper: ShapeClipper(
                 [
                   Offset(width / 5, _height),
                   Offset(width / 2, _height - 40),
@@ -108,14 +106,14 @@ class _HeaderWidgetState extends State<HeaderWidget> {
               height: _height - 10,
               child: Center(
                 child: Container(
-                  margin: EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(20),
                   padding: const EdgeInsets.only(
                     left: 5.0,
                     top: 20.0,
                     right: 5.0,
                     bottom: 20.0,
                   ),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     // borderRadius: BorderRadius.circular(20),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(100),

@@ -37,26 +37,37 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late List<FinalData> _chartData;
   @override
-  void initState(){
+  void initState() {
     _chartData = getChartData();
     super.initState();
   }
+
   Widget build(BuildContext context) {
     const double _headerHeight = 75;
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-        title: const Text("Hydration Check"),
-      ),
+          title: const Text("Hydration Check"),
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-               Container(
-              height: _headerHeight,
-              child: HeaderWidget(_headerHeight, true, Icons.login_rounded), //let's create a common header widget
-            ),
+              Container(
+                height: _headerHeight,
+                child: HeaderWidget(_headerHeight, true, Icons.login_rounded),
+              ),
+              SizedBox(
+                height: 150,
+                width: 150,
+                child: Image.network('https://img.freepik.com/free-icon/sunset_318-375746.jpg'),
+              ),
+
+              const SizedBox(
+                height: 25,
+              ),
+
               SfCircularChart(
                 legend: Legend(
                   isVisible: true,
@@ -65,17 +76,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 series: <CircularSeries>[
                   DoughnutSeries<FinalData, String>(
                     dataSource: _chartData,
-                    pointColorMapper: (FinalData data,_) => data.color,
-                    xValueMapper: (FinalData data,_) => data.label,
-                    yValueMapper: (FinalData data,_) => data.value,
+                    pointColorMapper: (FinalData data, _) => data.color,
+                    xValueMapper: (FinalData data, _) => data.label,
+                    yValueMapper: (FinalData data, _) => data.value,
                     explode: true,
                     explodeAll: true,
                   )
                 ],
               ),
+              
               const SizedBox(
-                height: 50,
+                height: 40,
               ),
+
               const Text(
                 "Body statistics on your fingertips",
                 style: TextStyle(
@@ -84,24 +97,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               const SizedBox(
-                height: 25,
+                height: 50,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  fixedSize: const Size(200, 60),
-                  side: const BorderSide(
-                    width:3, 
-                    color:Colors.white30,
-                  ),
-                  elevation: 3, 
-                  shape: RoundedRectangleBorder( 
-                    borderRadius: BorderRadius.circular(20)
-                  ),
-                  padding: const EdgeInsets.all(20) 
-                ),
+                    textStyle: const TextStyle(fontSize: 25),
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    fixedSize: const Size(250, 70),
+                    side: const BorderSide(
+                      width: 3,
+                      color: Colors.white30,
+                    ),
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.all(20)),
                 onPressed: () => print('pressed'),
                 child: const Text('Get Started'),
               )
@@ -111,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  List<FinalData> getChartData(){
+
+  List<FinalData> getChartData() {
     final List<FinalData> chartData = [
       FinalData('Hydration', 1, const Color.fromARGB(255, 0, 145, 255)),
       FinalData('Sunburn', 1, const Color.fromARGB(255, 255, 149, 0)),
@@ -121,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class FinalData{
+class FinalData {
   FinalData(this.label, this.value, this.color);
   final String label;
   final int value;
