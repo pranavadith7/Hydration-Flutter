@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 import 'header_widget.dart';
 
@@ -35,6 +36,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // const _MyHomePageState({super.key, required this.title});
   late List<FinalData> _chartData;
   @override
   void initState() {
@@ -113,7 +115,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     padding: const EdgeInsets.all(20)),
-                onPressed: () => print('pressed'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SecondRoute()),
+                  );
+                },
                 child: const Text('Get Started'),
               )
             ],
@@ -138,4 +145,81 @@ class FinalData {
   final String label;
   final int value;
   final Color color;
+}
+
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    // final List<SalesData> chartData = [
+    //   SalesData(2010, 35),
+    //   SalesData(2011, 28),
+    //   SalesData(2012, 34),
+    //   SalesData(2013, 32),
+    //   SalesData(2014, 40)
+    // ];
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Graph'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // SfCartesianChart(
+              //   primaryXAxis: DateTimeAxis(),
+              //   series: <ChartSeries>[
+              //     LineSeries<SalesData, double>(
+              //         dataSource: chartData,
+              //         xValueMapper: (SalesData sales, _) => sales.year,
+              //         yValueMapper: (SalesData sales, _) => sales.sales
+              //     )
+              //   ]
+              // ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: double.infinity,
+                height: 300,
+                child: LineChart(
+                  LineChartData(borderData: FlBorderData(show: false), lineBarsData: [
+                    LineChartBarData(spots: [
+                      const FlSpot(0, 148),
+                      const FlSpot(1, 150),
+                      const FlSpot(2, 151),
+                      const FlSpot(3, 157),
+                      const FlSpot(4, 142),
+                      const FlSpot(5, 143),
+                      const FlSpot(6, 147),
+                      const FlSpot(7, 155),
+                      const FlSpot(8, 149),
+                      const FlSpot(9, 148),
+                      const FlSpot(10, 150),
+                      const FlSpot(11, 151),
+                    ])
+                  ]),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Go back!'),
+              )
+            ]
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SalesData {
+  SalesData(this.year, this.sales);
+  final double year;
+  final double sales;
 }
