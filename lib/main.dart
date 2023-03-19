@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -8,8 +9,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'header_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -40,6 +45,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // const _MyHomePageState({super.key, required this.title});
   late List<FinalData> _chartData;
+
   @override
   void initState() {
     _chartData = getChartData();
@@ -160,10 +166,51 @@ class _SecondRouteState extends State<SecondRoute> {
   late List<LiveData> _chartData;
   late ChartSeriesController _chartSeriesController;
 
+  void getLast10Data() async {
+    await FirebaseDatabase
+      .instance
+      .ref("dataset")
+      .limitToLast(10)
+      .once()
+      .then((event) {
+        // print(event.snapshot.value);
+        if (event.snapshot.value != null) {
+          var dict = event.snapshot.value! as Map;
+          List<LiveData> tempData = [];
+          // print(dict);
+          dict.forEach((key, value) {
+            // print(value);
+            var gsrData = value as Map;
+            tempData.add(LiveData(time++, gsrData["gsrValue"]));
+          });
+          setState(() {
+            _chartData = tempData;
+            time = time;
+          });
+        }
+      });
+
+      FirebaseDatabase
+      .instance
+      .ref("dataset")
+      .limitToLast(1)
+      .onChildAdded
+      .listen((event) {
+        var dict = event.snapshot.value! as Map;
+        print(dict);
+        LiveData data = LiveData(time++, dict["gsrValue"]);
+        _chartData.add(data);
+        _chartData.removeAt(0);
+        _chartSeriesController.updateDataSource(
+      addedDataIndex: _chartData.length-1, removedDataIndex:0);
+      });
+  }
+
   void initState(){
     _chartData=getChartData();
-    Timer.periodic(const Duration(seconds: 1) , updataDataSource);
+    // Timer.periodic(const Duration(seconds: 1) , updataDataSource);
     super.initState();
+    getLast10Data();
   }
 
   @override
@@ -247,7 +294,7 @@ class _SecondRouteState extends State<SecondRoute> {
     );
   }
 
-  int time=19;
+  int time=0;
   void updataDataSource(Timer timer){
     _chartData.add(LiveData(time++, (math.Random().nextInt(60)+30))); 
     _chartData.removeAt(0); 
