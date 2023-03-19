@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1041518236915",
+    "firebase_url": "https://gsrwithuv-default-rtdb.firebaseio.com",
+    "project_id": "gsrwithuv",
+    "storage_bucket": "gsrwithuv.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041518236915:android:af9ced1327dd8cca651386",
+        "android_client_info": {
+          "package_name": "com.example.hydrated"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041518236915-22g83rgb0eeq4gr94gjhqkn1ea4gp9o5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDiHV-1Fb47thARVXTCVJB09IFOUAS7DY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041518236915-22g83rgb0eeq4gr94gjhqkn1ea4gp9o5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
