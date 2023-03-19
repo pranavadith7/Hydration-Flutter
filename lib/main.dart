@@ -1,10 +1,12 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
-
+import 'dart:async';
+import 'dart:math' as math;
 import 'header_widget.dart';
 
 void main() {
@@ -118,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SecondRoute()),
+                    MaterialPageRoute(builder: (context) => SecondRoute()),
                   );
                 },
                 child: const Text('Get Started'),
@@ -147,21 +149,25 @@ class FinalData {
   final Color color;
 }
 
+class SecondRoute extends StatefulWidget {
+  SecondRoute({super.key});
 
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({super.key});
+  @override
+  State<SecondRoute> createState() => _SecondRouteState();
+}
+
+class _SecondRouteState extends State<SecondRoute> {
+  late List<LiveData> _chartData;
+  late ChartSeriesController _chartSeriesController;
+
+  void initState(){
+    _chartData=getChartData();
+    Timer.periodic(const Duration(seconds: 1) , updataDataSource);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    // final List<SalesData> chartData = [
-    //   SalesData(2010, 35),
-    //   SalesData(2011, 28),
-    //   SalesData(2012, 34),
-    //   SalesData(2013, 32),
-    //   SalesData(2014, 40)
-    // ];
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -171,55 +177,111 @@ class SecondRoute extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // SfCartesianChart(
-              //   primaryXAxis: DateTimeAxis(),
-              //   series: <ChartSeries>[
-              //     LineSeries<SalesData, double>(
-              //         dataSource: chartData,
-              //         xValueMapper: (SalesData sales, _) => sales.year,
-              //         yValueMapper: (SalesData sales, _) => sales.sales
-              //     )
-              //   ]
-              // ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                width: double.infinity,
-                height: 300,
-                child: LineChart(
-                  LineChartData(borderData: FlBorderData(show: false), lineBarsData: [
-                    LineChartBarData(spots: [
-                      const FlSpot(0, 148),
-                      const FlSpot(1, 150),
-                      const FlSpot(2, 151),
-                      const FlSpot(3, 157),
-                      const FlSpot(4, 142),
-                      const FlSpot(5, 143),
-                      const FlSpot(6, 147),
-                      const FlSpot(7, 155),
-                      const FlSpot(8, 149),
-                      const FlSpot(9, 148),
-                      const FlSpot(10, 150),
-                      const FlSpot(11, 151),
-                    ])
-                  ]),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
+            //   Container(
+            //     padding: const EdgeInsets.all(10),
+            //     width: double.infinity,
+            //     height: 400,
+            //     child: LineChart(
+            //       LineChartData(borderData: FlBorderData(show: false), lineBarsData: [
+            //         LineChartBarData(spots: [
+            //           const FlSpot(0, 148),
+            //           const FlSpot(1, 150),
+            //           const FlSpot(2, 151),
+            //           const FlSpot(3, 157),
+            //           const FlSpot(4, 142),
+            //           const FlSpot(5, 143),
+            //           const FlSpot(6, 147),
+            //           const FlSpot(7, 155),
+            //           const FlSpot(8, 149),
+            //           const FlSpot(9, 148),
+            //           const FlSpot(10, 150),
+            //           const FlSpot(11, 151),
+            //         ],
+            //         isCurved: true,
+            //         barWidth: 5,
+            //         isStrokeCapRound: true,
+            //         dotData: FlDotData(
+            //           show: true,
+            //         ),
+            //         belowBarData: BarAreaData(
+            //           show: true,
+            //         ),
+            //       )
+            //     ]),
+            //   ),
+            // ),
+            SfCartesianChart(series: <ChartSeries>[
+              LineSeries<LiveData, int>(
+                onRendererCreated: (ChartSeriesController controller){
+                  _chartSeriesController = controller;
                 },
-                child: const Text('Go back!'),
+                dataSource: _chartData,
+                color: const Color.fromRGBO(192, 108, 132, 1),
+                xValueMapper: (LiveData sales, _) => sales.time,
+                yValueMapper: (LiveData sales, _) => sales.speed,
+
               )
-            ]
-          ),
+
+            ],
+            primaryXAxis: NumericAxis(
+              majorGridLines: const MajorGridLines(width: 0),
+              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              interval: 3,
+              title: AxisTitle(text: 'x')
+            ),
+            primaryYAxis: NumericAxis(
+              axisLine: const AxisLine(width: 0),
+              majorTickLines: const MajorTickLines(size:0),
+              title: AxisTitle(text: 'y'),
+            ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Go back!'),
+            )
+          ]),
         ),
       ),
     );
   }
+
+  int time=19;
+  void updataDataSource(Timer timer){
+    _chartData.add(LiveData(time++, (math.Random().nextInt(60)+30))); 
+    _chartData.removeAt(0); 
+    _chartSeriesController.updateDataSource(
+      addedDataIndex: _chartData.length-1, removedDataIndex:0);
+  }
+
+  List<LiveData> getChartData() {
+    return <LiveData>[
+      LiveData(0, 42),
+      LiveData(1, 47),
+      LiveData(2, 43),
+      LiveData(3, 49),
+      LiveData(4, 54),
+      LiveData(5, 41),
+      LiveData(6, 58),
+      LiveData(7, 51),
+      LiveData(8, 98),
+      LiveData(9, 41),
+      LiveData(10, 53),
+      LiveData(11, 72),
+      LiveData(12, 86),
+      LiveData(13, 52),
+      LiveData(14, 94),
+      LiveData(15, 92),
+      LiveData(16, 86),
+      LiveData(17, 72),
+      LiveData(18, 94)
+    ];
+  }
 }
 
-class SalesData {
-  SalesData(this.year, this.sales);
-  final double year;
-  final double sales;
+class LiveData {
+  LiveData(this.time, this.speed);
+  final int time;
+  final num speed;
 }
