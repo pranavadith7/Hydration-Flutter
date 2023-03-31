@@ -71,13 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 150,
                 width: 150,
-                child: Image.network('https://img.freepik.com/free-icon/sunset_318-375746.jpg'),
+                child: Image.network(
+                    'https://img.freepik.com/free-icon/sunset_318-375746.jpg'),
               ),
-
               const SizedBox(
                 height: 25,
               ),
-
               SfCircularChart(
                 legend: Legend(
                   isVisible: true,
@@ -94,11 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ],
               ),
-              
               const SizedBox(
                 height: 40,
               ),
-
               const Text(
                 "Body statistics on your fingertips",
                 style: TextStyle(
@@ -167,47 +164,45 @@ class _SecondRouteState extends State<SecondRoute> {
   late ChartSeriesController _chartSeriesController;
 
   void getLast10Data() async {
-    await FirebaseDatabase
-      .instance
-      .ref("dataset")
-      .limitToLast(10)
-      .once()
-      .then((event) {
-        // print(event.snapshot.value);
-        if (event.snapshot.value != null) {
-          var dict = event.snapshot.value! as Map;
-          List<LiveData> tempData = [];
-          // print(dict);
-          dict.forEach((key, value) {
-            // print(value);
-            var gsrData = value as Map;
-            tempData.add(LiveData(time++, gsrData["gsrValue"]));
-          });
-          setState(() {
-            _chartData = tempData;
-            time = time;
-          });
-        }
-      });
-
-      FirebaseDatabase
-      .instance
-      .ref("dataset")
-      .limitToLast(1)
-      .onChildAdded
-      .listen((event) {
+    await FirebaseDatabase.instance
+        .ref("dataset")
+        .limitToLast(10)
+        .once()
+        .then((event) {
+      // print(event.snapshot.value);
+      if (event.snapshot.value != null) {
         var dict = event.snapshot.value! as Map;
-        print(dict);
-        LiveData data = LiveData(time++, dict["gsrValue"]);
-        _chartData.add(data);
-        _chartData.removeAt(0);
-        _chartSeriesController.updateDataSource(
-      addedDataIndex: _chartData.length-1, removedDataIndex:0);
-      });
+        List<LiveData> tempData = [];
+        // print(dict);
+        dict.forEach((key, value) {
+          // print(value);
+          var gsrData = value as Map;
+          tempData.add(LiveData(time++, gsrData["gsrValue"]));
+        });
+        setState(() {
+          _chartData = tempData;
+          time = time;
+        });
+      }
+    });
+
+    FirebaseDatabase.instance
+        .ref("dataset")
+        .limitToLast(1)
+        .onChildAdded
+        .listen((event) {
+      var dict = event.snapshot.value! as Map;
+      print(dict);
+      LiveData data = LiveData(time++, dict["gsrValue"]);
+      _chartData.add(data);
+      _chartData.removeAt(0);
+      _chartSeriesController.updateDataSource(
+          addedDataIndex: _chartData.length - 1, removedDataIndex: 0);
+    });
   }
 
-  void initState(){
-    _chartData=getChartData();
+  void initState() {
+    _chartData = getChartData();
     // Timer.periodic(const Duration(seconds: 1) , updataDataSource);
     super.initState();
     getLast10Data();
@@ -221,66 +216,30 @@ class _SecondRouteState extends State<SecondRoute> {
           title: const Text('Graph'),
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-            //   Container(
-            //     padding: const EdgeInsets.all(10),
-            //     width: double.infinity,
-            //     height: 400,
-            //     child: LineChart(
-            //       LineChartData(borderData: FlBorderData(show: false), lineBarsData: [
-            //         LineChartBarData(spots: [
-            //           const FlSpot(0, 148),
-            //           const FlSpot(1, 150),
-            //           const FlSpot(2, 151),
-            //           const FlSpot(3, 157),
-            //           const FlSpot(4, 142),
-            //           const FlSpot(5, 143),
-            //           const FlSpot(6, 147),
-            //           const FlSpot(7, 155),
-            //           const FlSpot(8, 149),
-            //           const FlSpot(9, 148),
-            //           const FlSpot(10, 150),
-            //           const FlSpot(11, 151),
-            //         ],
-            //         isCurved: true,
-            //         barWidth: 5,
-            //         isStrokeCapRound: true,
-            //         dotData: FlDotData(
-            //           show: true,
-            //         ),
-            //         belowBarData: BarAreaData(
-            //           show: true,
-            //         ),
-            //       )
-            //     ]),
-            //   ),
-            // ),
-            SfCartesianChart(series: <ChartSeries>[
-              LineSeries<LiveData, int>(
-                onRendererCreated: (ChartSeriesController controller){
-                  _chartSeriesController = controller;
-                },
-                dataSource: _chartData,
-                color: const Color.fromRGBO(192, 108, 132, 1),
-                xValueMapper: (LiveData sales, _) => sales.time,
-                yValueMapper: (LiveData sales, _) => sales.speed,
-
-              )
-
-            ],
-            primaryXAxis: NumericAxis(
-              majorGridLines: const MajorGridLines(width: 0),
-              edgeLabelPlacement: EdgeLabelPlacement.shift,
-              interval: 3,
-              title: AxisTitle(text: 'x')
-            ),
-            primaryYAxis: NumericAxis(
-              axisLine: const AxisLine(width: 0),
-              majorTickLines: const MajorTickLines(size:0),
-              title: AxisTitle(text: 'y'),
-            ),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SfCartesianChart(
+              series: <ChartSeries>[
+                LineSeries<LiveData, int>(
+                  onRendererCreated: (ChartSeriesController controller) {
+                    _chartSeriesController = controller;
+                  },
+                  dataSource: _chartData,
+                  color: Color.fromARGB(255, 38, 206, 83),
+                  xValueMapper: (LiveData sales, _) => sales.time,
+                  yValueMapper: (LiveData sales, _) => sales.speed,
+                  width: 4
+                )
+              ],
+              primaryXAxis: NumericAxis(
+                  majorGridLines: const MajorGridLines(width: 0),
+                  edgeLabelPlacement: EdgeLabelPlacement.shift,
+                  interval: 3,
+                  title: AxisTitle(text: 'Time')),
+              primaryYAxis: NumericAxis(
+                axisLine: const AxisLine(width: 0),
+                majorTickLines: const MajorTickLines(size: 0),
+                title: AxisTitle(text: 'GSR Value'),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -294,35 +253,35 @@ class _SecondRouteState extends State<SecondRoute> {
     );
   }
 
-  int time=0;
-  void updataDataSource(Timer timer){
-    _chartData.add(LiveData(time++, (math.Random().nextInt(60)+30))); 
-    _chartData.removeAt(0); 
+  int time = 0;
+  void updataDataSource(Timer timer) {
+    _chartData.add(LiveData(time++, (math.Random().nextInt(60) + 30)));
+    _chartData.removeAt(0);
     _chartSeriesController.updateDataSource(
-      addedDataIndex: _chartData.length-1, removedDataIndex:0);
+        addedDataIndex: _chartData.length - 1, removedDataIndex: 0);
   }
 
   List<LiveData> getChartData() {
     return <LiveData>[
-      LiveData(0, 42),
-      LiveData(1, 47),
-      LiveData(2, 43),
-      LiveData(3, 49),
-      LiveData(4, 54),
-      LiveData(5, 41),
-      LiveData(6, 58),
-      LiveData(7, 51),
-      LiveData(8, 98),
-      LiveData(9, 41),
-      LiveData(10, 53),
-      LiveData(11, 72),
-      LiveData(12, 86),
-      LiveData(13, 52),
-      LiveData(14, 94),
-      LiveData(15, 92),
-      LiveData(16, 86),
-      LiveData(17, 72),
-      LiveData(18, 94)
+      LiveData(0, 220),
+      LiveData(1, 220),
+      LiveData(2, 220),
+      LiveData(3, 220),
+      LiveData(4, 220),
+      LiveData(5, 220),
+      LiveData(6, 220),
+      LiveData(7, 220),
+      LiveData(8, 220),
+      LiveData(9, 220),
+      // LiveData(10, 53),
+      // LiveData(11, 72),
+      // LiveData(12, 86),
+      // LiveData(13, 52),
+      // LiveData(14, 94),
+      // LiveData(15, 92),
+      // LiveData(16, 86),
+      // LiveData(17, 72),
+      // LiveData(18, 215)
     ];
   }
 }
