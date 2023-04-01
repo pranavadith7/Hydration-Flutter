@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'header_widget.dart';
@@ -66,7 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Container(
                 height: _headerHeight,
-                child: HeaderWidget(_headerHeight, true, Icons.login_rounded),
+                child: const HeaderWidget(
+                    _headerHeight, true, Icons.login_rounded),
               ),
               SizedBox(
                 height: 150,
@@ -220,15 +223,14 @@ class _SecondRouteState extends State<SecondRoute> {
             SfCartesianChart(
               series: <ChartSeries>[
                 LineSeries<LiveData, int>(
-                  onRendererCreated: (ChartSeriesController controller) {
-                    _chartSeriesController = controller;
-                  },
-                  dataSource: _chartData,
-                  color: Color.fromARGB(255, 38, 206, 83),
-                  xValueMapper: (LiveData sales, _) => sales.time,
-                  yValueMapper: (LiveData sales, _) => sales.speed,
-                  width: 4
-                )
+                    onRendererCreated: (ChartSeriesController controller) {
+                      _chartSeriesController = controller;
+                    },
+                    dataSource: _chartData,
+                    color: const Color.fromARGB(255, 38, 206, 83),
+                    xValueMapper: (LiveData sales, _) => sales.time,
+                    yValueMapper: (LiveData sales, _) => sales.speed,
+                    width: 4)
               ],
               primaryXAxis: NumericAxis(
                   majorGridLines: const MajorGridLines(width: 0),
@@ -241,7 +243,42 @@ class _SecondRouteState extends State<SecondRoute> {
                 title: AxisTitle(text: 'GSR Value'),
               ),
             ),
+            const SizedBox(
+              height: 30,
+            ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                  backgroundColor: const Color.fromARGB(255, 0, 243, 0),
+                  foregroundColor: Colors.black,
+                  fixedSize: const Size(200, 100),
+                  side: const BorderSide(
+                    width: 3,
+                    color: Colors.white30,
+                  ),
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.all(20)),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ThirdRoute()),
+                );
+              },
+              child: const Text(
+                'View your body statistics',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            ElevatedButton(
+              // style: ElevatedButton.styleFrom(
+              //   textStyle: const TextStyle(fontSize: 15),
+              //   fixedSize: const Size(150, 70)
+              // ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -290,4 +327,218 @@ class LiveData {
   LiveData(this.time, this.speed);
   final int time;
   final num speed;
+}
+
+class ThirdRoute extends StatefulWidget {
+  ThirdRoute({super.key});
+
+  @override
+  State<ThirdRoute> createState() => _ThirdRouteState();
+}
+
+class _ThirdRouteState extends State<ThirdRoute> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Body Statistics'),
+        ),
+        body: Center(
+          child:
+              // ignore: prefer_const_literals_to_create_immutables
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Text(
+              "Your Dehydration Status :",
+              style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blueAccent),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const SizedBox(
+                width: 300,
+                child: StepProgressIndicator(
+                  totalSteps: 100,
+                  currentStep: 80, //10,25,50,75,90
+                  size: 25,
+                  padding: 0,
+                  selectedColor: Color.fromARGB(255, 255, 133, 133),
+                  unselectedColor: Colors.grey,
+                  roundedEdges: Radius.circular(10),
+                  selectedGradientColor: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 255, 133, 133),
+                      Color.fromARGB(255, 223, 63, 51)
+                    ],
+                  ),
+                  unselectedGradientColor: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.grey, Colors.grey],
+                  ),
+                )),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              "{{Dehydration Status}}",
+              style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blueAccent),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Divider(
+              color: Colors.grey,
+              height: 20,
+              thickness: 1,
+            ),
+            const Text(
+              "Sunburn Prediction",
+              style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(219, 255, 119, 0)),
+            ),
+            const Divider(
+              color: Colors.grey,
+              height: 20,
+              thickness: 1,
+            ),
+            Container(
+              // height: 230,
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0), 
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: const [
+                        Text(
+                          "Curent UV Index : {{ UV }}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Based on the current UV Index and your dehydration status, you are likely to get {{ degree }} in {{ time }} seconds.",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(
+              color: Colors.grey,
+              height: 10,
+              thickness: 1,
+            ),
+            const Text(
+              "Vitamin-D Intake",
+              style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(219, 255, 119, 0)),
+            ),
+            const Divider(
+              color: Colors.grey,
+              height: 20,
+              thickness: 1,
+            ),
+            SizedBox(
+              height: 230,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: const [
+                        Text(
+                          "Required Amount Per Day :",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          "600 IU",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        CircularStepProgressIndicator(
+                          totalSteps: 600,
+                          currentStep: 250,
+                          // stepSize: 10,
+                          selectedColor: Colors.greenAccent,
+                          unselectedColor: Colors.grey,
+                          padding: 0,
+                          width: 150,
+                          height: 150,
+                          selectedStepSize: 10,
+                          stepSize: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const VerticalDivider(
+                    color: Colors.grey,
+                    thickness: 2,
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: const [
+                        Text(
+                          "Permissible Amount Per Day :",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        Text(
+                          "4000 IU",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        CircularStepProgressIndicator(
+                          totalSteps: 4000,
+                          currentStep: 2500,
+                          // stepSize: 10,
+                          selectedColor: Colors.greenAccent,
+                          unselectedColor: Colors.grey,
+                          padding: 0,
+                          width: 150,
+                          height: 150,
+                          selectedStepSize: 10,
+                          stepSize: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(
+              color: Colors.grey,
+              height: 10,
+              thickness: 1,
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
 }
