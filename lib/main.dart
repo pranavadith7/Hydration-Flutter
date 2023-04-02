@@ -244,47 +244,85 @@ class _SecondRouteState extends State<SecondRoute> {
         appBar: AppBar(
           title: const Text('Graph'),
         ),
-        body: Center(
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fitHeight,
+              invertColors: true,
+              image: NetworkImage(
+                  "https://whatgives365.files.wordpress.com/2010/10/water-rippling.jpg"),
+            ),
+          ),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SfCartesianChart(
-              series: <ChartSeries>[
-                LineSeries<LiveData, int>(
-                    onRendererCreated: (ChartSeriesController controller) {
-                      _chartSeriesController = controller;
-                    },
-                    dataSource: _chartData,
-                    color: const Color.fromARGB(255, 38, 206, 83),
-                    xValueMapper: (LiveData sales, _) => sales.time,
-                    yValueMapper: (LiveData sales, _) => sales.speed,
-                    width: 4)
-              ],
-              primaryXAxis: NumericAxis(
-                  majorGridLines: const MajorGridLines(width: 0),
-                  edgeLabelPlacement: EdgeLabelPlacement.shift,
-                  interval: 3,
-                  title: AxisTitle(text: 'Time')),
-              primaryYAxis: NumericAxis(
-                axisLine: const AxisLine(width: 0),
-                majorTickLines: const MajorTickLines(size: 0),
-                title: AxisTitle(text: 'GSR Value'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                child: SfCartesianChart(
+                  series: <ChartSeries>[
+                    LineSeries<LiveData, int>(
+                        onRendererCreated: (ChartSeriesController controller) {
+                          _chartSeriesController = controller;
+                        },
+                        dataSource: _chartData,
+                        color: const Color.fromARGB(255, 38, 206, 83),
+                        xValueMapper: (LiveData sales, _) => sales.time,
+                        yValueMapper: (LiveData sales, _) => sales.speed,
+                        width: 4)
+                  ],
+                  primaryXAxis: NumericAxis(
+                      majorGridLines: const MajorGridLines(width: 0),
+                      edgeLabelPlacement: EdgeLabelPlacement.shift,
+                      interval: 3,
+                      title: AxisTitle(text: 'Time')),
+                  primaryYAxis: NumericAxis(
+                    axisLine: const AxisLine(width: 0),
+                    majorTickLines: const MajorTickLines(size: 0),
+                    title: AxisTitle(text: 'GSR Value'),
+                  ),
+                ),
               ),
             ),
             const SizedBox(
               height: 30,
             ),
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(
+            //       textStyle: const TextStyle(fontSize: 20),
+            //       backgroundColor: Colors.white,
+            //       foregroundColor: Colors.black,
+            //       fixedSize: const Size(200, 100),
+            //       side: const BorderSide(
+            //         width: 3,
+            //         color: Colors.white30,
+            //       ),
+            //       elevation: 3,
+            //       shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(20)),
+            //       padding: const EdgeInsets.all(20)),
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => ThirdRoute()),
+            //     );
+            //   },
+            //   child: const Text(
+            //     'View your body statistics',
+            //     textAlign: TextAlign.center,
+            //   ),
+            // ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                  backgroundColor: const Color.fromARGB(255, 0, 243, 0),
-                  foregroundColor: Colors.black,
-                  fixedSize: const Size(200, 100),
+                  textStyle: const TextStyle(fontSize: 22),
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.red,
+                  fixedSize: const Size(312, 80),
                   side: const BorderSide(
-                    width: 3,
-                    color: Colors.white30,
-                  ),
+                      width: 3,
+                      color: Colors.red,
+                      strokeAlign: StrokeAlign.inside),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                      borderRadius: BorderRadius.circular(30)),
                   padding: const EdgeInsets.all(20)),
               onPressed: () {
                 Navigator.push(
@@ -294,7 +332,7 @@ class _SecondRouteState extends State<SecondRoute> {
               },
               child: const Text(
                 'View your body statistics',
-                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(
@@ -303,7 +341,7 @@ class _SecondRouteState extends State<SecondRoute> {
             ElevatedButton(
               // style: ElevatedButton.styleFrom(
               //   textStyle: const TextStyle(fontSize: 15),
-              //   fixedSize: const Size(150, 70)
+              // fixedSize: const Size(150, 70)
               // ),
               onPressed: () {
                 Navigator.pop(context);
@@ -384,30 +422,39 @@ class _ThirdRouteState extends State<ThirdRoute> {
             const SizedBox(
               height: 20,
             ),
-            const SizedBox(
-                width: 300,
-                child: StepProgressIndicator(
-                  totalSteps: 100,
-                  currentStep: 80, //10,25,50,75,90
-                  size: 25,
-                  padding: 0,
-                  selectedColor: Color.fromARGB(255, 255, 133, 133),
-                  unselectedColor: Colors.grey,
-                  roundedEdges: Radius.circular(10),
-                  selectedGradientColor: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 255, 133, 133),
-                      Color.fromARGB(255, 223, 63, 51)
-                    ],
-                  ),
-                  unselectedGradientColor: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Colors.grey, Colors.grey],
-                  ),
-                )),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                elevation: 10,
+                shadowColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                child: const SizedBox(
+                    width: 300,
+                    child: StepProgressIndicator(
+                      totalSteps: 100,
+                      currentStep: 80, //10,25,50,75,90
+                      size: 25,
+                      padding: 0,
+                      selectedColor: Color.fromARGB(255, 255, 133, 133),
+                      unselectedColor: Colors.grey,
+                      roundedEdges: Radius.circular(10),
+                      selectedGradientColor: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color.fromARGB(255, 255, 133, 133),
+                          Color.fromARGB(255, 223, 63, 51)
+                        ],
+                      ),
+                      unselectedGradientColor: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.grey, Colors.grey],
+                      ),
+                    )),
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -491,30 +538,45 @@ class _ThirdRouteState extends State<ThirdRoute> {
                 children: [
                   Expanded(
                     child: Column(
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           "Required Amount Per Day :",
                           style: TextStyle(fontSize: 15),
                         ),
-                        Text(
+                        const Text(
                           "600 IU",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
-                        CircularStepProgressIndicator(
-                          totalSteps: 600,
-                          currentStep: 250,
-                          // stepSize: 10,
-                          selectedColor: Colors.greenAccent,
-                          unselectedColor: Colors.grey,
-                          padding: 0,
-                          width: 150,
-                          height: 150,
-                          selectedStepSize: 10,
-                          stepSize: 10,
+                        SizedBox(
+                          child: CircularStepProgressIndicator(
+                            totalSteps: 600,
+                            currentStep: 250,
+                            // stepSize: 10,
+                            selectedColor: Colors.greenAccent,
+                            unselectedColor: Colors.grey,
+                            padding: 0,
+                            width: 150,
+                            height: 150,
+                            selectedStepSize: 10,
+                            stepSize: 10,
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  // color: Colors.lightBlueAccent,
+                                  borderRadius: BorderRadius.circular(100)),
+                              alignment: Alignment.center,
+                              child: const Text(
+                                "{{Number}}",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w900),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -526,17 +588,18 @@ class _ThirdRouteState extends State<ThirdRoute> {
                   ),
                   Expanded(
                     child: Column(
-                      children: const [
-                        Text(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        const Text(
                           "Permissible Amount Per Day :",
                           style: TextStyle(fontSize: 15),
                         ),
-                        Text(
+                        const Text(
                           "4000 IU",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         CircularStepProgressIndicator(
@@ -550,6 +613,19 @@ class _ThirdRouteState extends State<ThirdRoute> {
                           height: 150,
                           selectedStepSize: 10,
                           stepSize: 10,
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                                // color: Colors.lightBlueAccent,
+                                borderRadius: BorderRadius.circular(100)),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "{{Number}}",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w900),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -616,23 +692,52 @@ class _LiveTrackingState extends State<LiveTracking> {
   Widget _buildBody() {
     return SafeArea(
       child: Scaffold(
-        body: Center(
+        // backgroundColor:
+
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fitHeight,
+              // invertColors: true,
+              image: NetworkImage(
+                  "https://whatgives365.files.wordpress.com/2010/10/water-rippling.jpg"),
+            ),
+          ),
           child:
               // ignore: prefer_const_literals_to_create_immutables
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Card(
               elevation: 10,
               shadowColor: Colors.blueAccent,
-              child: Text(
-                _stopwatchText,
-                style: const TextStyle(
-                  color: Colors.blueAccent,
-                  fontSize: 50,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              child: Padding(
+                padding: const EdgeInsets.all(25.0),
+                child: Text(
+                  _stopwatchText,
+                  style: const TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 70,
+                  ),
                 ),
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 40,
+            ),
+            const Card(
+              elevation: 10,
+              margin: EdgeInsets.all(10),
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Chart",
+                  style: TextStyle(fontSize: 60),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 50,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -640,7 +745,14 @@ class _LiveTrackingState extends State<LiveTracking> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    textStyle: const TextStyle(fontSize: 20),
+                    textStyle: const TextStyle(fontSize: 30),
+                    fixedSize: const Size(130, 60),
+                    side: const BorderSide(
+                      width: 3,
+                      color: Colors.white30,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                   ),
                   onPressed: _startStopButtonPressed,
                   child: Text(_buttonText),
@@ -648,12 +760,47 @@ class _LiveTrackingState extends State<LiveTracking> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
-                    textStyle: const TextStyle(fontSize: 20),
+                    textStyle: const TextStyle(fontSize: 30),
+                    fixedSize: const Size(130, 60),
+                    side: const BorderSide(
+                      width: 3,
+                      color: Colors.white30,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                   ),
                   onPressed: _resetButtonPressed,
                   child: const Text("Reset"),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 30),
+                  backgroundColor: Colors.white24,
+                  foregroundColor: Colors.white,
+                  fixedSize: const Size(312, 80),
+                  side: const BorderSide(
+                      width: 2,
+                      color: Colors.white,
+                      strokeAlign: StrokeAlign.center),
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.all(20)),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ThirdRoute()),
+                );
+              },
+              child: const Text(
+                'View Results',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ]),
         ),
