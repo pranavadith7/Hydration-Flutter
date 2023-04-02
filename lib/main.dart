@@ -77,9 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Image.network(
                     'https://img.freepik.com/free-icon/sunset_318-375746.jpg'),
               ),
-              const SizedBox(
-                height: 25,
-              ),
+              // const SizedBox(
+              //   height: 25,
+              // ),
               SfCircularChart(
                 legend: Legend(
                   isVisible: true,
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               const SizedBox(
-                height: 40,
+                height: 10,
               ),
               const Text(
                 "Body statistics on your fingertips",
@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -130,6 +130,32 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
                 child: const Text('Get Started'),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 24),
+                    backgroundColor: Colors.orangeAccent,
+                    foregroundColor: Colors.black87,
+                    fixedSize: const Size(250, 70),
+                    side: const BorderSide(
+                      width: 3,
+                      color: Colors.white30,
+                    ),
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    padding: const EdgeInsets.all(20)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LiveTracking()),
+                  );
+                },
+                child: const Text(' Start Live Tracking'),
               )
             ],
           ),
@@ -414,7 +440,7 @@ class _ThirdRouteState extends State<ThirdRoute> {
             ),
             Container(
               // height: 230,
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0), 
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -540,5 +566,126 @@ class _ThirdRouteState extends State<ThirdRoute> {
         ),
       ),
     );
+  }
+}
+
+class LiveTracking extends StatefulWidget {
+  const LiveTracking({super.key});
+
+  @override
+  State<LiveTracking> createState() => _LiveTrackingState();
+}
+
+class _LiveTrackingState extends State<LiveTracking> {
+  String _buttonText = "Start";
+  String _stopwatchText = "00:00:00";
+  final _stopWatch = Stopwatch();
+  final _timeout = const Duration(seconds: 1);
+
+  void _startTimeout() {
+    /*Timer(_timeout, _handleTimeout);*/
+    Timer(_timeout, () {
+      if (_stopWatch.isRunning) {
+        _startTimeout();
+      }
+      setState(() {
+        _setStopwatchText();
+      });
+    });
+  }
+
+  void _handleTimeoutBak() {
+    if (_stopWatch.isRunning) {
+      _startTimeout();
+    }
+    setState(() {
+      _setStopwatchText();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Live Data Tracking"),
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child:
+              // ignore: prefer_const_literals_to_create_immutables
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Card(
+              elevation: 10,
+              shadowColor: Colors.blueAccent,
+              child: Text(
+                _stopwatchText,
+                style: const TextStyle(
+                  color: Colors.blueAccent,
+                  fontSize: 50,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
+                  onPressed: _startStopButtonPressed,
+                  child: Text(_buttonText),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
+                  onPressed: _resetButtonPressed,
+                  child: const Text("Reset"),
+                ),
+              ],
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  void _startStopButtonPressed() {
+    setState(() {
+      if (_stopWatch.isRunning) {
+        _buttonText = "Start";
+        _stopWatch.stop();
+      } else {
+        _buttonText = "Stop";
+        _stopWatch.start();
+        _startTimeout();
+      }
+    });
+  }
+
+  void _resetButtonPressed() {
+    if (_stopWatch.isRunning) {
+      _startStopButtonPressed();
+    }
+    setState(() {
+      _stopWatch.reset();
+      _setStopwatchText();
+    });
+  }
+
+  void _setStopwatchText() {
+    _stopwatchText =
+        "${_stopWatch.elapsed.inHours.toString().padLeft(2, "0")}:${(_stopWatch.elapsed.inMinutes % 60).toString().padLeft(2, "0")}:${(_stopWatch.elapsed.inSeconds % 60).toString().padLeft(2, "0")}";
   }
 }
