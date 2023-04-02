@@ -66,10 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+              const SizedBox(
                 height: _headerHeight,
-                child: const HeaderWidget(
-                    _headerHeight, true, Icons.login_rounded),
+                child: HeaderWidget(_headerHeight, true, Icons.login_rounded),
               ),
               SizedBox(
                 height: 150,
@@ -137,8 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     textStyle: const TextStyle(fontSize: 24),
-                    backgroundColor: Colors.orangeAccent,
-                    foregroundColor: Colors.black87,
+                    backgroundColor: const Color.fromARGB(255, 254, 24, 101),
+                    foregroundColor: Colors.white,
                     fixedSize: const Size(250, 70),
                     side: const BorderSide(
                       width: 3,
@@ -168,7 +167,9 @@ class _MyHomePageState extends State<MyHomePage> {
     final List<FinalData> chartData = [
       FinalData('Hydration', 1, const Color.fromARGB(255, 0, 145, 255)),
       FinalData('Sunburn', 1, const Color.fromARGB(255, 255, 149, 0)),
-      FinalData('Vitamin-D', 1, const Color.fromARGB(255, 224, 243, 21)),
+      // FinalData('Vitamin-D', 1, const Color.fromARGB(255, 224, 243, 21)),
+      FinalData('Vitamin-D', 1, const Color.fromARGB(255, 254, 24, 101),),
+
     ];
     return chartData;
   }
@@ -270,13 +271,14 @@ class _SecondRouteState extends State<SecondRoute> {
                         width: 4)
                   ],
                   primaryXAxis: NumericAxis(
-                      majorGridLines: const MajorGridLines(width: 0),
+                      axisLine: const AxisLine(width: 3),
                       edgeLabelPlacement: EdgeLabelPlacement.shift,
-                      interval: 3,
+                      interval: 1,
                       title: AxisTitle(text: 'Time')),
                   primaryYAxis: NumericAxis(
-                    axisLine: const AxisLine(width: 0),
+                    axisLine: const AxisLine(width: 3),
                     majorTickLines: const MajorTickLines(size: 0),
+                    edgeLabelPlacement: EdgeLabelPlacement.shift,
                     title: AxisTitle(text: 'GSR Value'),
                   ),
                 ),
@@ -285,31 +287,6 @@ class _SecondRouteState extends State<SecondRoute> {
             const SizedBox(
               height: 30,
             ),
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //       textStyle: const TextStyle(fontSize: 20),
-            //       backgroundColor: Colors.white,
-            //       foregroundColor: Colors.black,
-            //       fixedSize: const Size(200, 100),
-            //       side: const BorderSide(
-            //         width: 3,
-            //         color: Colors.white30,
-            //       ),
-            //       elevation: 3,
-            //       shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(20)),
-            //       padding: const EdgeInsets.all(20)),
-            //   onPressed: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => ThirdRoute()),
-            //     );
-            //   },
-            //   child: const Text(
-            //     'View your body statistics',
-            //     textAlign: TextAlign.center,
-            //   ),
-            // ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 22),
@@ -403,6 +380,7 @@ class ThirdRoute extends StatefulWidget {
 class _ThirdRouteState extends State<ThirdRoute> {
   @override
   Widget build(BuildContext context) {
+    const double headerHeight = 75;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -411,7 +389,14 @@ class _ThirdRouteState extends State<ThirdRoute> {
         body: Center(
           child:
               // ignore: prefer_const_literals_to_create_immutables
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            const SizedBox(
+              height: headerHeight,
+              child: HeaderWidget(headerHeight, true, Icons.login_rounded),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             const Text(
               "Your Dehydration Status :",
               style: TextStyle(
@@ -496,14 +481,15 @@ class _ThirdRouteState extends State<ThirdRoute> {
                       children: const [
                         Text(
                           "Curent UV Index : {{ UV }}",
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         Text(
-                          "Based on the current UV Index and your dehydration status, you are likely to get {{ degree }} in {{ time }} seconds.",
-                          style: TextStyle(fontSize: 15),
+                          "Based on the current UV Index and your dehydration status, you are likely to get {{ degree }} sunburn in {{ time }} seconds.",
+                          style: TextStyle(fontSize: 20),
                         ),
                         SizedBox(
                           height: 20,
@@ -549,31 +535,40 @@ class _ThirdRouteState extends State<ThirdRoute> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
                         SizedBox(
-                          child: CircularStepProgressIndicator(
-                            totalSteps: 600,
-                            currentStep: 250,
-                            // stepSize: 10,
-                            selectedColor: Colors.greenAccent,
-                            unselectedColor: Colors.grey,
-                            padding: 0,
-                            width: 150,
-                            height: 150,
-                            selectedStepSize: 10,
-                            stepSize: 10,
-                            child: Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                  // color: Colors.lightBlueAccent,
-                                  borderRadius: BorderRadius.circular(100)),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                "{{Number}}",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w900),
+                          child: Card(
+                            elevation: 5,
+                            shadowColor:
+                                const Color.fromARGB(255, 254, 24, 101),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100)),
+                            child: CircularStepProgressIndicator(
+                              totalSteps: 600,
+                              currentStep: 250,
+                              // stepSize: 10,
+                              selectedColor:
+                                  const Color.fromARGB(255, 254, 24, 101),
+                              unselectedColor: Colors.grey,
+                              padding: 0,
+                              width: 150,
+                              height: 150,
+                              selectedStepSize: 15,
+                              stepSize: 15,
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    // color: Colors.lightBlueAccent,
+                                    borderRadius: BorderRadius.circular(100)),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  "{{Number}}",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900),
+                                ),
                               ),
                             ),
                           ),
@@ -600,30 +595,39 @@ class _ThirdRouteState extends State<ThirdRoute> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
-                        CircularStepProgressIndicator(
-                          totalSteps: 4000,
-                          currentStep: 2500,
-                          // stepSize: 10,
-                          selectedColor: Colors.greenAccent,
-                          unselectedColor: Colors.grey,
-                          padding: 0,
-                          width: 150,
-                          height: 150,
-                          selectedStepSize: 10,
-                          stepSize: 10,
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                // color: Colors.lightBlueAccent,
+                        SizedBox(
+                          child: Card(
+                            elevation: 5,
+                            shadowColor: Colors.orange,
+                            shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100)),
-                            alignment: Alignment.center,
-                            child: const Text(
-                              "{{Number}}",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w900),
+                            child: CircularStepProgressIndicator(
+                              totalSteps: 4000,
+                              currentStep: 2500,
+                              // stepSize: 10,
+                              selectedColor: Colors.orange,
+                              unselectedColor: Colors.grey,
+                              padding: 0,
+                              width: 150,
+                              height: 150,
+                              selectedStepSize: 15,
+                              stepSize: 15,
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    // color: Colors.lightBlueAccent,
+                                    borderRadius: BorderRadius.circular(100)),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  "{{Number}}",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -690,6 +694,7 @@ class _LiveTrackingState extends State<LiveTracking> {
   }
 
   Widget _buildBody() {
+    const double headerHeight = 75;
     return SafeArea(
       child: Scaffold(
         // backgroundColor:
@@ -705,7 +710,14 @@ class _LiveTrackingState extends State<LiveTracking> {
           ),
           child:
               // ignore: prefer_const_literals_to_create_immutables
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            const SizedBox(
+              height: headerHeight,
+              child: HeaderWidget(headerHeight, true, Icons.login_rounded),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
             Card(
               elevation: 10,
               shadowColor: Colors.blueAccent,
@@ -717,7 +729,7 @@ class _LiveTrackingState extends State<LiveTracking> {
                   _stopwatchText,
                   style: const TextStyle(
                     color: Colors.blueAccent,
-                    fontSize: 70,
+                    fontSize: 60,
                   ),
                 ),
               ),
@@ -732,12 +744,12 @@ class _LiveTrackingState extends State<LiveTracking> {
                 padding: EdgeInsets.all(10.0),
                 child: Text(
                   "Chart",
-                  style: TextStyle(fontSize: 60),
+                  style: TextStyle(fontSize: 150),
                 ),
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 30,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
