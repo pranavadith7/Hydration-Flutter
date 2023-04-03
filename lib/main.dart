@@ -13,6 +13,7 @@ import 'dart:math' as math;
 import 'header_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:http/http.dart' as http;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -378,6 +379,48 @@ class ThirdRoute extends StatefulWidget {
 }
 
 class _ThirdRouteState extends State<ThirdRoute> {
+
+String stat = "no data";
+void fetchGsr() async {
+    // await Future.delayed(const Duration(seconds: 2));
+    try {
+      final response = await http
+          .get(
+            Uri.http(
+              "192.168.1.119:5000",
+              "getGsrResult",
+            ),
+          )
+          .timeout(const Duration(seconds: 20));
+      log("${response.statusCode}");
+      Map<String, dynamic> resTemp = json.decode(response.body);
+      Map<String, String> temp = resTemp.map(((key, value) => MapEntry(key, value.toString())));
+      log(temp.toString());
+
+      setState(() {
+        // _isLoading = false;
+        stat = temp["status"]!;
+        // currUv = double.parse(temp["uv"]!);
+      });
+    } catch (e, stackTrace) {
+      print(e);
+      print(stackTrace.toString());
+      setState(() {
+        // _isLoading = false;
+        // stat = "Unexpected error";
+        // stat = "Dehydrated";
+        stat = "Server not responding";
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // log(widget.uname);
+    fetchGsr();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     const double headerHeight = 75;
@@ -443,9 +486,9 @@ class _ThirdRouteState extends State<ThirdRoute> {
             const SizedBox(
               height: 20,
             ),
-            const Text(
-              "{{Dehydration Status}}",
-              style: TextStyle(
+            Text(
+              stat,
+              style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w600,
                   color: Colors.blueAccent),
