@@ -385,6 +385,7 @@ class _ThirdRouteState extends State<ThirdRoute> {
 String stat = "no data";
 String nextStage = "no data";
 double currUv = 0.0;
+double time_diff = 0.0;
 
 int rTime = -1;
 
@@ -458,7 +459,7 @@ void fetchGsr() async {
       final response = await http
           .get(
             Uri.http(
-              "192.168.42.81:5000",
+              "192.168.1.115:5000",
               "getGsrResult",
             ),
           )
@@ -469,8 +470,10 @@ void fetchGsr() async {
       log(temp.toString());
 
       setState(() {
+        // print(temp); 
         // _isLoading = false;
         stat = temp["status"]!;
+        time_diff = double.parse(temp["delta"]!);
         // currUv = double.parse(temp["uv"]!);
       });
     } catch (e, stackTrace) {
@@ -529,7 +532,7 @@ void fetchGsr() async {
       final response = await http
           .get(
             Uri.http(
-              "192.168.42.81:5000",
+              "192.168.1.115:5000",
               "getUVindex",
               {
                 "lat": location.latitude.toString(),
@@ -739,7 +742,7 @@ void fetchGsr() async {
                                 borderRadius: BorderRadius.circular(100)),
                             child: CircularStepProgressIndicator(
                               totalSteps: 600,
-                              currentStep: 250,
+                              currentStep: time_diff.toInt(),
                               // stepSize: 10,
                               selectedColor:
                                   const Color.fromARGB(255, 254, 24, 101),
@@ -756,9 +759,9 @@ void fetchGsr() async {
                                     // color: Colors.lightBlueAccent,
                                     borderRadius: BorderRadius.circular(100)),
                                 alignment: Alignment.center,
-                                child: const Text(
-                                  "{{Number}}",
-                                  style: TextStyle(
+                                child: Text(
+                                  "$time_diff",
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900),
                                 ),
@@ -798,7 +801,7 @@ void fetchGsr() async {
                                 borderRadius: BorderRadius.circular(100)),
                             child: CircularStepProgressIndicator(
                               totalSteps: 4000,
-                              currentStep: 2500,
+                              currentStep: time_diff.toInt(),
                               // stepSize: 10,
                               selectedColor: Colors.orange,
                               unselectedColor: Colors.grey,
@@ -814,9 +817,9 @@ void fetchGsr() async {
                                     // color: Colors.lightBlueAccent,
                                     borderRadius: BorderRadius.circular(100)),
                                 alignment: Alignment.center,
-                                child: const Text(
-                                  "{{Number}}",
-                                  style: TextStyle(
+                                child: Text(
+                                  "$time_diff",
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900),
                                 ),
