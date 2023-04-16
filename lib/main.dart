@@ -299,7 +299,8 @@ class _SecondRouteState extends State<SecondRoute> {
                   side: const BorderSide(
                       width: 3,
                       color: Colors.red,
-                      strokeAlign: BorderSide.strokeAlignCenter),
+                      // strokeAlign: BorderSide.strokeAlignCenter
+                  ),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
@@ -996,7 +997,8 @@ class _LiveTrackingState extends State<LiveTracking> {
                   side: const BorderSide(
                       width: 2,
                       color: Colors.white,
-                      strokeAlign: BorderSide.strokeAlignCenter),
+                      // strokeAlign: BorderSide.strokeAlignCenter
+                      ),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
