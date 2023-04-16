@@ -384,7 +384,75 @@ class ThirdRoute extends StatefulWidget {
 class _ThirdRouteState extends State<ThirdRoute> {
 
 String stat = "no data";
+String nextStage = "no data";
 double currUv = 0.0;
+double time_diff = 0.0;
+
+int rTime = -1;
+
+void setBurnStatus() {
+  if (stat.toLowerCase() == "no dehydration") {
+    if (currUv == 0) {
+      rTime = -1;
+    } else if (currUv<= 2) {
+      rTime = 3600;
+    } else if (currUv<= 5) {
+      rTime = 2700;
+    } else if (currUv<= 7) {
+      rTime = 1800;
+    } else if (currUv<= 10) {
+      rTime = 1200;
+    } else {
+      rTime = 660;
+    }
+    nextStage = "Some Dehydration";
+  } else if (stat.toLowerCase() == "some dehydration") {
+    if (currUv== 0) {
+      rTime = -1;
+    } else if (currUv<= 2) {
+      rTime = 2700;
+    } else if (currUv<= 5) {
+      rTime = 2040;
+    } else if (currUv<= 7) {
+      rTime = 1350;
+    } else if (currUv<= 10) {
+      rTime = 900;
+    } else {
+      rTime = 660;
+    }
+    nextStage = "Severe Dehydration";
+  } else if (stat.toLowerCase() == "severe dehydration") {
+    if (currUv== 0) {
+      rTime = -1;
+    } else if (currUv<= 2) {
+      rTime = 1800;
+    } else if (currUv<= 5) {
+      rTime = 1350;
+    } else if (currUv<= 7) {
+      rTime = 900;
+    } else if (currUv<= 10) {
+      rTime = 750;
+    } else {
+      rTime = 660;
+    }
+    nextStage = "Compenstated";
+  } else if (stat.toLowerCase() == "compenstated") {
+    if (currUv== 0) {
+      rTime = -1;
+    } else if (currUv<= 2) {
+      rTime = 1350;
+    } else if (currUv<= 5) {
+      rTime = 1012;
+    } else if (currUv<= 7) {
+      rTime = 700;
+    } else if (currUv<= 10) {
+      rTime = 680;
+    } else {
+      rTime = 660;
+    }
+    nextStage = "Deompenstated";
+  }
+}
 
 void fetchGsr() async {
     // await Future.delayed(const Duration(seconds: 2));
@@ -392,7 +460,7 @@ void fetchGsr() async {
       final response = await http
           .get(
             Uri.http(
-              "192.168.42.81:5000",
+              "192.168.1.115:5000",
               "getGsrResult",
             ),
           )
@@ -403,8 +471,10 @@ void fetchGsr() async {
       log(temp.toString());
 
       setState(() {
+        // print(temp); 
         // _isLoading = false;
         stat = temp["status"]!;
+        time_diff = double.parse(temp["delta"]!);
         // currUv = double.parse(temp["uv"]!);
       });
     } catch (e, stackTrace) {
@@ -463,7 +533,7 @@ void fetchGsr() async {
       final response = await http
           .get(
             Uri.http(
-              "192.168.42.81:5000",
+              "192.168.1.115:5000",
               "getUVindex",
               {
                 "lat": location.latitude.toString(),
@@ -480,8 +550,9 @@ void fetchGsr() async {
       setState(() {
         // _isLoading = false;
         // stat = temp["status"]!;
-        // currUv = double.parse(temp["uv"]!);
         currUv = double.parse(temp["uv"]!);
+        // currUv = double.parse(temp["uv_max"]!);
+        setBurnStatus();
       });
     } catch (e, stackTrace) {
       print(e);
@@ -498,6 +569,7 @@ void fetchGsr() async {
   @override
   void initState() {
     // log(widget.uname);
+    setBurnStatus();
     fetchGsr();
     fetchUvIndex();
     super.initState();
@@ -613,7 +685,7 @@ void fetchGsr() async {
                           height: 10,
                         ),
                         Text(
-                          "Based on the current UV Index and your dehydration status, you are likely to get {{ degree }} sunburn in {{ time }} seconds.",
+                          ((rTime == -1 || nextStage == "no data") ? "Based on the current UV Index and your dehydration status, you are likely to get {{ degree }} sunburn in {{ time }} seconds." : "Based on the current UV Index and your dehydration status, you are likely to get $nextStage sunburn in $rTime seconds."),
                           style: TextStyle(fontSize: 20),
                         ),
                         const SizedBox(
@@ -671,7 +743,7 @@ void fetchGsr() async {
                                 borderRadius: BorderRadius.circular(100)),
                             child: CircularStepProgressIndicator(
                               totalSteps: 600,
-                              currentStep: 250,
+                              currentStep: time_diff.toInt(),
                               // stepSize: 10,
                               selectedColor:
                                   const Color.fromARGB(255, 254, 24, 101),
@@ -688,9 +760,9 @@ void fetchGsr() async {
                                     // color: Colors.lightBlueAccent,
                                     borderRadius: BorderRadius.circular(100)),
                                 alignment: Alignment.center,
-                                child: const Text(
-                                  "{{Number}}",
-                                  style: TextStyle(
+                                child: Text(
+                                  "$time_diff",
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900),
                                 ),
@@ -730,7 +802,7 @@ void fetchGsr() async {
                                 borderRadius: BorderRadius.circular(100)),
                             child: CircularStepProgressIndicator(
                               totalSteps: 4000,
-                              currentStep: 2500,
+                              currentStep: time_diff.toInt(),
                               // stepSize: 10,
                               selectedColor: Colors.orange,
                               unselectedColor: Colors.grey,
@@ -746,9 +818,9 @@ void fetchGsr() async {
                                     // color: Colors.lightBlueAccent,
                                     borderRadius: BorderRadius.circular(100)),
                                 alignment: Alignment.center,
-                                child: const Text(
-                                  "{{Number}}",
-                                  style: TextStyle(
+                                child: Text(
+                                  "$time_diff",
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900),
                                 ),
