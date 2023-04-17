@@ -171,8 +171,11 @@ class _MyHomePageState extends State<MyHomePage> {
       FinalData('Hydration', 1, const Color.fromARGB(255, 0, 145, 255)),
       FinalData('Sunburn', 1, const Color.fromARGB(255, 255, 149, 0)),
       // FinalData('Vitamin-D', 1, const Color.fromARGB(255, 224, 243, 21)),
-      FinalData('Vitamin-D', 1, const Color.fromARGB(255, 254, 24, 101),),
-
+      FinalData(
+        'Vitamin-D',
+        1,
+        const Color.fromARGB(255, 254, 24, 101),
+      ),
     ];
     return chartData;
   }
@@ -297,9 +300,9 @@ class _SecondRouteState extends State<SecondRoute> {
                   foregroundColor: Colors.red,
                   fixedSize: const Size(312, 80),
                   side: const BorderSide(
-                      width: 3,
-                      color: Colors.red,
-                      // strokeAlign: BorderSide.strokeAlignCenter
+                    width: 3,
+                    color: Colors.red,
+                    // strokeAlign: BorderSide.strokeAlignCenter
                   ),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
@@ -382,99 +385,137 @@ class ThirdRoute extends StatefulWidget {
 }
 
 class _ThirdRouteState extends State<ThirdRoute> {
+  String stat = "no data";
+  String nextStage = "no data";
+  int nextStage_int = 10;
+  double currUv = 0.0;
+  double time_diff = 0.0;
+  double vit_d = 0.0;
+  int vit_d_int = 0;
+  int rTime = -1;
 
-String stat = "no data";
-String nextStage = "no data";
-double currUv = 0.0;
-double time_diff = 0.0;
+// vit_d = 600 * time_diff / rTime
 
-int rTime = -1;
+  void setBurnStatus() {
+    double temp_vd = 0;
+    if (stat.toLowerCase() == "no dehydration") {
+      if (currUv == 0) {
+        rTime = -1;
+      } else if (currUv <= 2) {
+        rTime = 3600;
+      } else if (currUv <= 5) {
+        rTime = 2700;
+      } else if (currUv <= 7) {
+        rTime = 1800;
+      } else if (currUv <= 10) {
+        rTime = 1200;
+      } else {
+        rTime = 660;
+      }
+      if (rTime == -1) {
+        temp_vd = 0;
+      } else {
+        temp_vd = 600 * time_diff! / rTime;
+      }
+      nextStage = "Some Dehydration";
+      nextStage_int = 10;
+    } else if (stat.toLowerCase() == "some dehydration") {
+      if (currUv == 0) {
+        rTime = -1;
+      } else if (currUv <= 2) {
+        rTime = 2700;
+      } else if (currUv <= 5) {
+        rTime = 2040;
+      } else if (currUv <= 7) {
+        rTime = 1350;
+      } else if (currUv <= 10) {
+        rTime = 900;
+      } else {
+        rTime = 660;
+      }
+      if (rTime == -1) {
+        temp_vd = 0;
+      } else {
+        temp_vd = 600 * time_diff! / rTime;
+      }
+      nextStage = "Severe Dehydration";
+      nextStage_int = 25;
+    } else if (stat.toLowerCase() == "severe dehydration") {
+      if (currUv == 0) {
+        rTime = -1;
+      } else if (currUv <= 2) {
+        rTime = 1800;
+      } else if (currUv <= 5) {
+        rTime = 1350;
+      } else if (currUv <= 7) {
+        rTime = 900;
+      } else if (currUv <= 10) {
+        rTime = 750;
+      } else {
+        rTime = 660;
+      }
+      if (rTime == -1) {
+        temp_vd = 0;
+      } else {
+        temp_vd = 600 * time_diff! / rTime;
+      }
+      nextStage = "Compenstated";
+      nextStage_int = 50;
+    } else if (stat.toLowerCase() == "compenstated") {
+      if (currUv == 0) {
+        rTime = -1;
+      } else if (currUv <= 2) {
+        rTime = 1350;
+      } else if (currUv <= 5) {
+        rTime = 1012;
+      } else if (currUv <= 7) {
+        rTime = 700;
+      } else if (currUv <= 10) {
+        rTime = 680;
+      } else {
+        rTime = 660;
+      }
+      if (rTime == -1) {
+        temp_vd = 0;
+      } else {
+        temp_vd = 600 * time_diff! / rTime;
+      }
+      nextStage = "Deompenstated";
+      nextStage_int = 75;
+    }
+    setState(() {
+      print(temp_vd);
 
-void setBurnStatus() {
-  if (stat.toLowerCase() == "no dehydration") {
-    if (currUv == 0) {
-      rTime = -1;
-    } else if (currUv<= 2) {
-      rTime = 3600;
-    } else if (currUv<= 5) {
-      rTime = 2700;
-    } else if (currUv<= 7) {
-      rTime = 1800;
-    } else if (currUv<= 10) {
-      rTime = 1200;
-    } else {
-      rTime = 660;
-    }
-    nextStage = "Some Dehydration";
-  } else if (stat.toLowerCase() == "some dehydration") {
-    if (currUv== 0) {
-      rTime = -1;
-    } else if (currUv<= 2) {
-      rTime = 2700;
-    } else if (currUv<= 5) {
-      rTime = 2040;
-    } else if (currUv<= 7) {
-      rTime = 1350;
-    } else if (currUv<= 10) {
-      rTime = 900;
-    } else {
-      rTime = 660;
-    }
-    nextStage = "Severe Dehydration";
-  } else if (stat.toLowerCase() == "severe dehydration") {
-    if (currUv== 0) {
-      rTime = -1;
-    } else if (currUv<= 2) {
-      rTime = 1800;
-    } else if (currUv<= 5) {
-      rTime = 1350;
-    } else if (currUv<= 7) {
-      rTime = 900;
-    } else if (currUv<= 10) {
-      rTime = 750;
-    } else {
-      rTime = 660;
-    }
-    nextStage = "Compenstated";
-  } else if (stat.toLowerCase() == "compenstated") {
-    if (currUv== 0) {
-      rTime = -1;
-    } else if (currUv<= 2) {
-      rTime = 1350;
-    } else if (currUv<= 5) {
-      rTime = 1012;
-    } else if (currUv<= 7) {
-      rTime = 700;
-    } else if (currUv<= 10) {
-      rTime = 680;
-    } else {
-      rTime = 660;
-    }
-    nextStage = "Deompenstated";
+      vit_d = temp_vd;
+      print("vitamin");
+      print(vit_d);
+      vit_d_int = vit_d.toInt();
+    });
   }
-}
 
-void fetchGsr() async {
+  void fetchGsr() async {
     // await Future.delayed(const Duration(seconds: 2));
     try {
       final response = await http
           .get(
             Uri.http(
-              "192.168.1.115:5000",
+              "192.168.234.133:5000",
               "getGsrResult",
             ),
           )
           .timeout(const Duration(seconds: 20));
       log("${response.statusCode}");
       Map<String, dynamic> resTemp = json.decode(response.body);
-      Map<String, String> temp = resTemp.map(((key, value) => MapEntry(key, value.toString())));
+      Map<String, String> temp =
+          resTemp.map(((key, value) => MapEntry(key, value.toString())));
       log(temp.toString());
 
       setState(() {
-        // print(temp); 
+        // print(temp);
         // _isLoading = false;
         stat = temp["status"]!;
         time_diff = double.parse(temp["delta"]!);
+        setBurnStatus();
         // currUv = double.parse(temp["uv"]!);
       });
     } catch (e, stackTrace) {
@@ -533,7 +574,7 @@ void fetchGsr() async {
       final response = await http
           .get(
             Uri.http(
-              "192.168.1.115:5000",
+              "192.168.234.133:5000",
               "getUVindex",
               {
                 "lat": location.latitude.toString(),
@@ -544,7 +585,8 @@ void fetchGsr() async {
           .timeout(const Duration(seconds: 20));
       log("${response.statusCode}");
       Map<String, dynamic> resTemp = json.decode(response.body);
-      Map<String, String> temp = resTemp.map(((key, value) => MapEntry(key, value.toString())));
+      Map<String, String> temp =
+          resTemp.map(((key, value) => MapEntry(key, value.toString())));
       log(temp.toString());
 
       setState(() {
@@ -558,10 +600,10 @@ void fetchGsr() async {
       print(e);
       print(stackTrace.toString());
       // setState(() {
-        // _isLoading = false;
-        // stat = "Unexpected error";
-        // stat = "Dehydrated";
-        // stat = "Server not responding";
+      // _isLoading = false;
+      // stat = "Unexpected error";
+      // stat = "Dehydrated";
+      // stat = "Server not responding";
       // });
     }
   }
@@ -611,17 +653,17 @@ void fetchGsr() async {
                 shadowColor: Colors.red,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                child: const SizedBox(
+                child: SizedBox(
                     width: 300,
                     child: StepProgressIndicator(
                       totalSteps: 100,
-                      currentStep: 80, //10,25,50,75,90
+                      currentStep: nextStage_int, //10,25,50,75,90
                       size: 25,
                       padding: 0,
-                      selectedColor: Color.fromARGB(255, 255, 133, 133),
+                      selectedColor: const Color.fromARGB(255, 255, 133, 133),
                       unselectedColor: Colors.grey,
-                      roundedEdges: Radius.circular(10),
-                      selectedGradientColor: LinearGradient(
+                      roundedEdges: const Radius.circular(10),
+                      selectedGradientColor: const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
@@ -629,7 +671,7 @@ void fetchGsr() async {
                           Color.fromARGB(255, 223, 63, 51)
                         ],
                       ),
-                      unselectedGradientColor: LinearGradient(
+                      unselectedGradientColor: const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [Colors.grey, Colors.grey],
@@ -678,15 +720,17 @@ void fetchGsr() async {
                       children: [
                         Text(
                           "Curent UV Index: $currUv",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 25, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         Text(
-                          ((rTime == -1 || nextStage == "no data") ? "Based on the current UV Index and your dehydration status, you are likely to get {{ degree }} sunburn in {{ time }} seconds." : "Based on the current UV Index and your dehydration status, you are likely to get $nextStage sunburn in $rTime seconds."),
-                          style: TextStyle(fontSize: 20),
+                          ((rTime == -1 || nextStage == "no data")
+                              ? "Based on the current UV Index you will not get sun burned."
+                              : "Based on the current UV Index and your dehydration status, you are likely to get First Degree sunburn in $rTime seconds (~${(rTime)~/60} minutes)."),
+                          style: const TextStyle(fontSize: 20),
                         ),
                         const SizedBox(
                           height: 20,
@@ -743,7 +787,7 @@ void fetchGsr() async {
                                 borderRadius: BorderRadius.circular(100)),
                             child: CircularStepProgressIndicator(
                               totalSteps: 600,
-                              currentStep: time_diff.toInt(),
+                              currentStep: vit_d_int <= 0 ? 0 : vit_d_int,
                               // stepSize: 10,
                               selectedColor:
                                   const Color.fromARGB(255, 254, 24, 101),
@@ -761,7 +805,7 @@ void fetchGsr() async {
                                     borderRadius: BorderRadius.circular(100)),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "$time_diff",
+                                  "$vit_d_int",
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900),
@@ -802,7 +846,7 @@ void fetchGsr() async {
                                 borderRadius: BorderRadius.circular(100)),
                             child: CircularStepProgressIndicator(
                               totalSteps: 4000,
-                              currentStep: time_diff.toInt(),
+                              currentStep: vit_d_int <= 0 ? 0 : vit_d_int,
                               // stepSize: 10,
                               selectedColor: Colors.orange,
                               unselectedColor: Colors.grey,
@@ -819,7 +863,7 @@ void fetchGsr() async {
                                     borderRadius: BorderRadius.circular(100)),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  "$time_diff",
+                                  "$vit_d_int",
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900),
@@ -975,13 +1019,13 @@ class _LiveTrackingState extends State<LiveTracking> {
                   _stopwatchText,
                   style: const TextStyle(
                     color: Colors.blueAccent,
-                    fontSize: 60,
+                    fontSize: 50,
                   ),
                 ),
               ),
             ),
             const SizedBox(
-              height: 40,
+              height: 30,
             ),
             Card(
               // elevation: 10,
@@ -995,29 +1039,29 @@ class _LiveTrackingState extends State<LiveTracking> {
               // ),
               // TODO: Graph
               child: SfCartesianChart(
-                  series: <ChartSeries>[
-                    LineSeries<LiveData, int>(
-                        onRendererCreated: (ChartSeriesController controller) {
-                          _chartSeriesController = controller;
-                        },
-                        dataSource: _chartData,
-                        color: const Color.fromARGB(255, 38, 206, 83),
-                        xValueMapper: (LiveData sales, _) => sales.time,
-                        yValueMapper: (LiveData sales, _) => sales.speed,
-                        width: 4)
-                  ],
-                  primaryXAxis: NumericAxis(
-                      axisLine: const AxisLine(width: 3),
-                      edgeLabelPlacement: EdgeLabelPlacement.shift,
-                      interval: 1,
-                      title: AxisTitle(text: 'Time')),
-                  primaryYAxis: NumericAxis(
+                series: <ChartSeries>[
+                  LineSeries<LiveData, int>(
+                      onRendererCreated: (ChartSeriesController controller) {
+                        _chartSeriesController = controller;
+                      },
+                      dataSource: _chartData,
+                      color: const Color.fromARGB(255, 38, 206, 83),
+                      xValueMapper: (LiveData sales, _) => sales.time,
+                      yValueMapper: (LiveData sales, _) => sales.speed,
+                      width: 4)
+                ],
+                primaryXAxis: NumericAxis(
                     axisLine: const AxisLine(width: 3),
-                    majorTickLines: const MajorTickLines(size: 0),
                     edgeLabelPlacement: EdgeLabelPlacement.shift,
-                    title: AxisTitle(text: 'GSR Value'),
-                  ),
+                    interval: 1,
+                    title: AxisTitle(text: 'Time')),
+                primaryYAxis: NumericAxis(
+                  axisLine: const AxisLine(width: 3),
+                  majorTickLines: const MajorTickLines(size: 0),
+                  edgeLabelPlacement: EdgeLabelPlacement.shift,
+                  title: AxisTitle(text: 'GSR Value'),
                 ),
+              ),
             ),
             const SizedBox(
               height: 30,
@@ -1058,7 +1102,7 @@ class _LiveTrackingState extends State<LiveTracking> {
               ],
             ),
             const SizedBox(
-              height: 50,
+              height: 30,
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -1067,10 +1111,10 @@ class _LiveTrackingState extends State<LiveTracking> {
                   foregroundColor: Colors.white,
                   fixedSize: const Size(312, 80),
                   side: const BorderSide(
-                      width: 2,
-                      color: Colors.white,
-                      // strokeAlign: BorderSide.strokeAlignCenter
-                      ),
+                    width: 2,
+                    color: Colors.white,
+                    // strokeAlign: BorderSide.strokeAlignCenter
+                  ),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
